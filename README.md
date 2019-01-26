@@ -3,9 +3,9 @@
 This project is for install a Linux server and prepare it to host web applications, secure server from a number of attack vectors, install and configure a database server, and deploy one of existing web applications onto it.
 
 ## IP & Hostname & SSH port
-Host Name: ec2-18-130-87-242.eu-west-2.compute.amazonaws.com
-IP Address: 18.130.87.242
-SSH port: 2200
+- Host Name: ec2-18-130-87-242.eu-west-2.compute.amazonaws.com
+- IP Address: 18.130.87.242
+- SSH port: 2200
 
 ## Amazon Lightsail Setup
 
@@ -15,37 +15,37 @@ SSH port: 2200
 4. Go to the networking tab click add another and choose **Custom** for application, **TCP** for protocol, and the port number 123 , 2200. Then click save.
 
 ## Linux Configuration
-- Now move your downloaded key to .ssh folder you can find it in windows at this path C:\Users\WinDows\.ssh.
-- For make our key secure type `$ chmod 600 ~/.ssh/udacity.pem` into the terminal.
-- Login into server as the user `ubuntu` with our key `$ ssh -i ~/.ssh/udacity.pem ubuntu@18.130.87.242`.
-- Switch to the root user by typing `sudo su -`.
-- Create `grader` user `$ sudo adduser grader`.
-- To give the user **grader** superuser privileges `$ sudo nano /etc/sudoers.d/grader`. the nano file will open type `grader ALL=(ALL:ALL)`.
-- Now we should **update** package list, **upgrade** the current packages ```
+1. Now move your downloaded key to .ssh folder you can find it in windows at this path C:\Users\WinDows\.ssh.
+2. For make our key secure type `$ chmod 600 ~/.ssh/udacity.pem` into the terminal.
+3. Login into server as the user `ubuntu` with our key `$ ssh -i ~/.ssh/udacity.pem ubuntu@18.130.87.242`.
+4. Switch to the root user by typing `sudo su -`.
+5. Create `grader` user `$ sudo adduser grader`.
+6. To give the user **grader** superuser privileges `$ sudo nano /etc/sudoers.d/grader`. the nano file will open type `grader ALL=(ALL:ALL)`.
+7. Now we should **update** package list, **upgrade** the current packages ```
 $ sudo apt-get update
 $ sudo apt-get upgrade
 $ sudo apt-get dist-upgrade
 
 ```
-- Install **Finger** `$ sudo apt-get install finger`
-- Create an SSH Key for new user **grader** open a new terminal type: `$ ssh-keygen -f ~/.ssh/udacity.rsa`
-- Copy the key from the same terminal `$ cat ~/.ssh/udacity.rsa.pub` Now **Copy** the key from terminal.
-- Go to first terminal and type `$ cd /home/grader`.
-- Create a directory `$ mkdir .ssh`
-- Create a file to store public key `$ touch .ssh/authorized_keys`
-- Open **authorized_keys** file `$ nano .ssh/authorized_keys` and paste into it the public key
-- Change the permissions of folder and file
+8. Install **Finger** `$ sudo apt-get install finger`
+9. Create an SSH Key for new user **grader** open a new terminal type: `$ ssh-keygen -f ~/.ssh/udacity.rsa`
+10. Copy the key from the same terminal `$ cat ~/.ssh/udacity.rsa.pub` Now **Copy** the key from terminal.
+11. Go to first terminal and type `$ cd /home/grader`.
+12. Create a directory `$ mkdir .ssh`
+13. Create a file to store public key `$ touch .ssh/authorized_keys`
+14. Open **authorized_keys** file `$ nano .ssh/authorized_keys` and paste into it the public key
+15. Change the permissions of folder and file
 ```
 $ sudo chmod 700 /home/grader/.ssh
 $ sudo chmod 644 /home/grader/.ssh/authorized_keys
 ```
-- Change the owner of the `.ssh` directory to **grader** `$ sudo chown -R grader:grader /home/grader/.ssh`.
-- Restart SSh service `$ sudo service ssh restart`
-- Now login as grader from terminal `$ ssh -i ~/.ssh/udacity.rsa grader@18.130.87.242`
-- Open ssh configuration file `$ sudo nano /etc/ssh/sshd_config`. Find **Port 22** and change it to **Port 2200**.Change **PasswordAuthentication** to **no**. then change **PermitRootLogin** to **no**.
--  Restart SSh service `$ sudo service ssh restart`
-- Login again with change port `$ ssh -i ~/.ssh/udacity.rsa grader@18.130.87.242 -p 2200`
-- Configure the firewall :
+16. Change the owner of the `.ssh` directory to **grader** `$ sudo chown -R grader:grader /home/grader/.ssh`.
+17. Restart SSh service `$ sudo service ssh restart`
+18. Now login as grader from terminal `$ ssh -i ~/.ssh/udacity.rsa grader@18.130.87.242`
+19. Open ssh configuration file `$ sudo nano /etc/ssh/sshd_config`. Find **Port 22** and change it to **Port 2200**.Change **PasswordAuthentication** to **no**. then change **PermitRootLogin** to **no**.
+20.  Restart SSh service `$ sudo service ssh restart`
+21. Login again with change port `$ ssh -i ~/.ssh/udacity.rsa grader@18.130.87.242 -p 2200`
+22. Configure the firewall :
 ```
 $ sudo ufw default deny incoming
 $ sudo ufw default allow outgoing
@@ -56,24 +56,24 @@ $ sudo ufw deny 22
 $ sudo ufw enable
 ```
 ## Application Deployment
-- Configure the local timezone to UTC `$ sudo timedatectl set-timezone UTC`.
-- Installing the required software
+23. Configure the local timezone to UTC `$ sudo timedatectl set-timezone UTC`.
+24. Installing the required software
 ```
 $ sudo apt-get install apache2
 $ sudo apt-get install libapache2-mod-wsgi python-dev
 $ sudo apt-get install git
 ```
-- Enable mod_wsgi `$ sudo a2enmod wsgi`.
-- Restart Apache using `$ sudo service apache2 restart`.
-- Create a directory for catalog application and make the user **grader** the owner.
+25. Enable mod_wsgi `$ sudo a2enmod wsgi`.
+26. Restart Apache using `$ sudo service apache2 restart`.
+27. Create a directory for catalog application and make the user **grader** the owner.
 ```
 $ cd /var/www
 $ sudo mkdir catalog
 $ sudo chown -R grader:grader catalog
 $ cd catalog
 ```
-- Cloning Catalog Application repository by `$ git clone [repository url] catalog`
-- Create the .wsgi file `$ sudo nano catalog.wsgi` and type:
+28. Cloning Catalog Application repository by `$ git clone [repository url] catalog`
+29. Create the .wsgi file `$ sudo nano catalog.wsgi` and type:
 ```
 import sys
 import logging
@@ -83,15 +83,15 @@ sys.path.insert(0, "/var/www/catalog/")
 from catalog import app as application
 application.secret_key = 'super_secret_key'
 ```
-- Rename `application.py` to `__init__.py` by `$ mv project.py __init__.py`.
-- Create virtual environment, you should be into `/var/www/catalog`.
+30. Rename `application.py` to `__init__.py` by `$ mv project.py __init__.py`.
+31. Create virtual environment, you should be into `/var/www/catalog`.
 ```
 $ sudo pip install virtualenv
 $ sudo virtualenv venv
 $ source venv/bin/activate
 $ sudo chmod -R 777 venv
 ```
--  Install all packages required for our Flask application.
+32.  Install all packages required for our Flask application.
 ```
 $ sudo apt-get install python-pip
 $ sudo pip install flask
@@ -101,8 +101,8 @@ $ sudo pip install --upgrade oauth2client
 $ sudo apt-get install libpq-dev
 $ sudo pip install sqlalchemy_utils
 ```
-- Open `$ sudo nano __init__.py` and find `client_secrets.json` change it's path to `/var/www/catalog/catalog/client_secrets.json`
-- Configure and enable virtual host to run the site `$ sudo nano /etc/apache2/sites-available/catalog.conf`
+33. Open `$ sudo nano __init__.py` and find `client_secrets.json` change it's path to `/var/www/catalog/catalog/client_secrets.json`
+34. Configure and enable virtual host to run the site `$ sudo nano /etc/apache2/sites-available/catalog.conf`
 Paste in the following:
 ```
 <VirtualHost *:80>
@@ -126,19 +126,21 @@ Paste in the following:
     CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
-- For finding your servers hostname go to [here](https://whatismyipaddress.com/ip-hostname) and paste the IP address.
-- Enable to virtual host: `$ sudo a2ensite catalog.conf`
-- **DISABLE** the default host `$ a2dissite 000-default.conf`.
+35. For finding your servers hostname go to [here](https://whatismyipaddress.com/ip-hostname) and paste the IP address.
+36. Enable to virtual host: `$ sudo a2ensite catalog.conf`
+37. **DISABLE** the default host `$ a2dissite 000-default.conf`.
+
 
 ## Database Setup
-- Install the following:
+
+1. Install the following:
 ```
 $ sudo apt-get install libpq-dev python-dev
 $ sudo apt-get install postgresql postgresql-contrib
 $ sudo su - postgres -i
 $ psql
 ```
-- Create a database user and password
+2. Create a database user and password
 ```
 postgres=# CREATE USER catalog WITH PASSWORD [password];
 postgres=# ALTER USER catalog CREATEDB;
@@ -149,15 +151,20 @@ catalog=# GRANT ALL ON SCHEMA public TO catalog;
 catalog=# \q
 $ exit
 ```
-- Nano again to edit this files: ` __init__.py`, `database_setup.py`, and `createitems.py`  change the database **engine** from `sqlite://catalog.db` to `postgresql://username:password@localhost/catalog`.
-- Restart apache server `$ sudo service apache2 restart`
+3. Nano again to edit this files: ` __init__.py`, `database_setup.py`, and `createitems.py`  change the database **engine** from `sqlite://catalog.db` to `postgresql://username:password@localhost/catalog`.
+4. Restart apache server `$ sudo service apache2 restart`
+
+
+
 ## Google OAuth Setup
-- Go to [console cloud google](https://console.developers.google.com/)
-- Add to Authorized domains **`xip.io`** From **OAuth consent screen** tab.
-- Add to Authorized JavaScript: http://18.130.87.242.xip.io
-- Add to redirect URIs: http://18.130.87.242.xip.io/login , http://18.130.87.242.xip.io/gconnect
-- Download the updated JSON file
-- Edit `client_secrets.json` file `$ sudo nano client_secrets.json` **Paste** into it the updated JSON file
-- Restart apache server `$ sudo service apache2 restart`
-### References:
+
+1. Go to [console cloud google](https://console.developers.google.com/)
+2. Add to Authorized domains **`xip.io`** From **OAuth consent screen** tab.
+3. Add to Authorized JavaScript: http://18.130.87.242.xip.io
+4. Add to redirect URIs: http://18.130.87.242.xip.io/login , http://18.130.87.242.xip.io/gconnect
+5. Download the updated JSON file
+6. Edit `client_secrets.json` file `$ sudo nano client_secrets.json` **Paste** into it the updated JSON file
+7. Restart apache server `$ sudo service apache2 restart`
+
+### References
 - https://github.com/mulligan121/Udacity-Linux-Configuration
