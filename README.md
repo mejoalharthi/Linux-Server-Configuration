@@ -7,17 +7,6 @@ Host Name: ec2-18-130-87-242.eu-west-2.compute.amazonaws.com
 IP Address: 18.130.87.242
 SSH port: 2200
 
-
-Open Git bash or Terminal navigate to the project folders by following this instructions:
-  ```
-  cd vagrant
-  vagrant up
-  vagrant ssh
-  cd /vagrant
-  cd catalog
-  ```
-
-
 ## Amazon Lightsail Setup
 
 1. Login to [Amazon Lightsail](https://aws.amazon.com/lightsail/) website. (if you don't have account you should create one)
